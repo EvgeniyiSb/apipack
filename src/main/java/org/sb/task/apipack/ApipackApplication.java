@@ -8,7 +8,5 @@ public class ApipackApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ApipackApplication.class, args);
-
-
     }
 }

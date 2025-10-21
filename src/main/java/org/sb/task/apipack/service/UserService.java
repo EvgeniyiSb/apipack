@@ -27,15 +27,16 @@ public interface UserService {
 
     /**
      * Обновить данные пользователя
+     * @param id Идентификатор пользователя
      * @param user Пользователь
      * @return Пользователь
      */
-    User update(User user);
+    User update(int id, User user);
 
     /**
      * Удалить пользователя
      * @param id Идентификатор пользователя
-     * @return идентификатор удалённого пользователя
+     * @return Идентификатор удалённого пользователя
      */
     int delete(int id);
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -14,27 +15,43 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User create(User user) {
+        User userSaved = userRepository.save(user);
 
-        return null;
+        return userSaved;
     }
 
     @Override
     public User read(int id) {
-        return null;
+        Optional<User> userOptional = userRepository.findById(id);
+
+        return userOptional.orElse(null);
     }
 
     @Override
     public List<User> readAll() {
-        return List.of();
+        return userRepository.findAll();
     }
 
     @Override
-    public User update(User user) {
-        return null;
+    public User update(int id, User user) {
+        if(!userRepository.existsById(id)){
+            return null;
+        }
+
+        user.setId(id);
+        userRepository.save(user);
+
+        return user;
     }
 
     @Override
     public int delete(int id) {
-        return 0;
+        if (!userRepository.existsById(id)){
+            return -1;
+        }
+
+        userRepository.deleteById(id);
+
+        return id;
     }
 }
