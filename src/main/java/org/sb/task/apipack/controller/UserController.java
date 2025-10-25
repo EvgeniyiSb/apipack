@@ -6,11 +6,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.json.simple.JSONObject;
 import org.sb.task.apipack.model.User;
 import org.sb.task.apipack.service.UserService;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * Контроллер работы с пользователями
@@ -59,7 +65,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(getUserWithHATEOAS(user), HttpStatus.OK);
     }
 
     /**
@@ -70,12 +76,18 @@ public class UserController {
     @Operation(summary = "Получить список всех пользователей", description = "Получение списка всех пользователей")
     public ResponseEntity<List<User>> findAll(){
         List<User> userList = userService.readAll();
+        List<User> userListTemp = new ArrayList<>();
 
         if (userList.isEmpty() || userList == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(userList, HttpStatus.OK);
+        for (User user: userList){
+            user.add(linkTo(methodOn(UserController.class).read(user.getId())).withSelfRel());
+            userListTemp.add(user);
+        }
+
+        return new ResponseEntity<>(userListTemp, HttpStatus.OK);
     }
 
     /**
@@ -98,7 +110,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
         }
 
-        return new ResponseEntity<>(userUpdated, HttpStatus.OK);
+        return new ResponseEntity<>(getUserWithHATEOAS(userUpdated), HttpStatus.OK);
     }
 
     /**
@@ -121,5 +133,17 @@ public class UserController {
         jsonObject.put("id", idDeleted);
 
         return new ResponseEntity<>(jsonObject, HttpStatus.OK);
+    }
+
+    /**
+     * Добавить HATEOAS-ссылки
+     * @param user Пользователь
+     * @return Пользователь с ссылками HATEOAS
+     */
+    private User getUserWithHATEOAS(User user){
+        Link self = linkTo(methodOn(UserController.class).read(user.getId())).withSelfRel();
+        Link all = linkTo(methodOn(UserController.class).findAll()).withRel("all");
+
+        return user.add(self).add(all);
     }
 }
