@@ -52,9 +52,9 @@ public class GatewayAPI implements HttpHandler {
     }
 
     /**
-     * Вывод результата
-     * @param httpExchange Сгенерированны HTTP-запрос обмена
-     * @param httpCode HTTP-код ответ
+     * Вывести результат выходного потока
+     * @param httpExchange Сгенерированный HTTP-запрос обмена
+     * @param httpCode HTTP-код ответа
      * @param response Возвращаемый ответ
      * @throws IOException Ошибка ввода/вывода
      */
@@ -63,7 +63,7 @@ public class GatewayAPI implements HttpHandler {
     }
 
     /**
-     *
+     * Вывести результат выходного потока
      * @param httpExchange Сгенерированны HTTP-запрос обмена
      * @param httpCode HTTP-код ответ
      * @param response Возвращаемый ответ
@@ -76,9 +76,9 @@ public class GatewayAPI implements HttpHandler {
     }
 
     /**
-     * Получить маршрут из списка заданных URL-маршрутов
-     * @param path Входной маршрут
-     * @return Выходной маршнут
+     * Получить путь из списка заданных URL-маршрутов
+     * @param path Входной путь
+     * @return Полученный путь
      */
     private static String route(String path){
         for (Map.Entry<String, String> entry : ROUTE_LIST.entrySet()){
